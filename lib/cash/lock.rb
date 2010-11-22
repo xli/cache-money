@@ -25,7 +25,7 @@ module Cash
     def acquire_lock(key, lock_expiry = DEFAULT_EXPIRY, retries = DEFAULT_RETRY)
       retries.times do |count|
         begin
-          response = @cache.add("lock/#{key}", Process.pid, lock_expiry)
+          response = @cache.add("lock/#{key}", Thread.current.object_id, lock_expiry)
           return if response == "STORED\r\n"
           raise Error if count == retries - 1
         end
@@ -45,7 +45,7 @@ module Cash
     private
 
     def recursive_lock?(key)
-      @cache.get("lock/#{key}") == Process.pid
+      @cache.get("lock/#{key}") == Thread.current.object_id
     end
 
   end

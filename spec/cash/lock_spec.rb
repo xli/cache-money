@@ -48,14 +48,14 @@ module Cash
       specify "retries specified number of times" do
         $lock.acquire_lock('lock_key')
         as_another_process do
-          mock($memcache).add("lock/lock_key", Process.pid, timeout = 10) { "NOT_STORED\r\n" }.times(3)
+          mock($memcache).add("lock/lock_key", Thread.current.object_id, timeout = 10) { "NOT_STORED\r\n" }.times(3)
           stub($lock).exponential_sleep
           lambda { $lock.acquire_lock('lock_key', timeout, 3) }.should raise_error
         end
       end
 
       specify "correctly sets timeout on memcache entries" do
-        mock($memcache).add('lock/lock_key', Process.pid, timeout = 10) { "STORED\r\n" }
+        mock($memcache).add('lock/lock_key', Thread.current.object_id, timeout = 10) { "STORED\r\n" }
         $lock.acquire_lock('lock_key', timeout)
       end
 
