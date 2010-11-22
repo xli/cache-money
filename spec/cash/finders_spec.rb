@@ -168,6 +168,16 @@ module Cash
                 end
               end
 
+              describe 'when the find conditions have postgresql escape char' do
+                it "does not use the database" do
+                  story = Story.create!(:title => title = 'title')
+                  mock(Story.connection).execute.never
+                  Story.send :with_scope, :find => { :conditions => { :id => story.id }} do
+                    Story.find(:first, :conditions => "title = E'title'").should == story
+                  end
+                end
+              end
+
               describe '#find(1, :conditions => ...)' do
                 it "does not use the database" do
                   story = Story.create!
