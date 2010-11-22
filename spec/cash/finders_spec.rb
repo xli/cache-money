@@ -343,6 +343,11 @@ module Cash
             Story.find(:all, :conditions => { :title => @story.title })
             Story.fetch("title/#{@story.title}").should == [@story.id]
           end
+
+          it 'conditions inlucdes non-column-name key' do
+            Story.find(:all, :conditions => { :title => @story.title })
+            Story.find(:all, :conditions => "1 = 1").should == [@story]
+          end
         end
 
         describe '#find(1)' do
