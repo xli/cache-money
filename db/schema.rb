@@ -9,4 +9,9 @@ ActiveRecord::Schema.define(:version => 2) do
     t.integer "story_id"
     t.string "name"
   end
+
+  create_table "cards", :force => true do |t|
+    t.string "name"
+    t.string  "description"
+  end
 end

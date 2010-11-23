@@ -33,10 +33,14 @@ module Cash
       def cache_config=(config)
         @cache_config = config
       end
+
+      def disable_cache
+        @cache_config.disable_cache
+      end
     end
 
     class Config
-      attr_reader :active_record, :options
+      attr_reader :active_record, :options, :indices
 
       def self.create(active_record, options, indices = [])
         active_record.cache_config = new(active_record, options)
@@ -45,6 +49,7 @@ module Cash
 
       def initialize(active_record, options = {})
         @active_record, @options = active_record, options
+        @indices = active_record == ActiveRecord::Base ? [] : [Index.new(self, active_record, active_record.primary_key)]
       end
 
       def repository
@@ -59,8 +64,8 @@ module Cash
         @options[:version] || 1
       end
 
-      def indices
-        @indices ||= active_record == ActiveRecord::Base ? [] : [Index.new(self, active_record, active_record.primary_key)]
+      def disable_cache
+        @indices = [].freeze
       end
 
       def inherit(active_record)

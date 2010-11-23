@@ -49,6 +49,8 @@ module Cash
 
       private
       def cacheable?(*optionss)
+        return if indices.empty?
+
         optionss.each { |options| return unless safe_options_for_cache?(options) }
         partial_indices = optionss.collect { |options| attribute_value_pairs_for_conditions(options[:conditions]) }
         return if partial_indices.include?(nil)
