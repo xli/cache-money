@@ -27,8 +27,8 @@ require 'cash/util/array'
 class ActiveRecord::Base
   def self.is_cached(options = {})
     options.assert_valid_keys(:ttl, :repository, :version)
-    include Cash
-    Config.create(self, options)
+    self.send(:include, Cash)
+    Cash::Config::Config.create(self, options)
   end
 end
 

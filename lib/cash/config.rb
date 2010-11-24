@@ -64,10 +64,6 @@ module Cash
         @options[:version] || 1
       end
 
-      def disable_cache
-        @indices = [].freeze
-      end
-
       def inherit(active_record)
         self.class.create(active_record, @options, indices)
       end
