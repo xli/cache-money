@@ -4,6 +4,7 @@ require 'rubygems'
 require 'active_support'
 require 'active_record'
 
+require 'cash/threadsafe_hash'
 require 'cash/lock'
 require 'cash/transactional'
 require 'cash/write_through'
